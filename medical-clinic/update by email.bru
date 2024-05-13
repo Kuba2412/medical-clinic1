@@ -1,0 +1,24 @@
+meta {
+  name: update by email
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/patients/anna.nowak@example.com
+  body: none
+  auth: none
+}
+
+tests {
+  {
+     "email": "anna.nowak@example.com",
+     "password": "nowehaslo",
+     "idCardNo": "DEF789012",
+     "firstName": "Anna",
+     "lastName": "Nowak",
+     "phoneNumber": "987654321",
+     "birthday": "1995-02-02"
+  }
+  
+}

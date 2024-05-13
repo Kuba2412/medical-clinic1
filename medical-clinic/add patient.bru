@@ -1,0 +1,24 @@
+meta {
+  name: add patient
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/patients
+  body: none
+  auth: none
+}
+
+tests {
+   {
+     "email": "jan.kowalski@example.com",
+     "password": "haslo123",
+     "idCardNo": "ABC123456",
+     "firstName": "Jan",
+     "lastName": "Kowalski",
+     "phoneNumber": "123456789",
+     "birthday": "1990-01-01"
+  }
+  
+}
