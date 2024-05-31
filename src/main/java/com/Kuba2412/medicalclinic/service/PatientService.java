@@ -1,7 +1,8 @@
 package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.mapper.PatientMapper;
-import com.Kuba2412.medicalclinic.dto.PatientDTO;
+import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
+import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import com.Kuba2412.medicalclinic.model.Patient;
@@ -16,12 +17,17 @@ import java.util.List;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final UserService userService;
     private final PatientMapper patientMapper;
 
     public PatientDTO getPatientDtoByEmail(String email) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
         return patientMapper.patientToPatientDTO(patient);
+    }
+    public Patient getPatientByEmail(String email) {
+        return patientRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
     }
 
     public List<PatientDTO> getPatientDtosByFirstName(String firstName) {
@@ -36,9 +42,12 @@ public class PatientService {
                 .toList();
     }
 
-    public Patient addPatient(Patient patient) {
-        checkEmailIsAvailable(patient.getEmail());
-        return patientRepository.save(patient);
+    public PatientDTO addPatient(String username, String password, PatientDTO patientDTO) {
+        User user = userService.addUser(username, password);
+        Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+        patient.setUser(user);
+        patientRepository.save(patient);
+        return patientMapper.patientToPatientDTO(patient);
     }
 
     public void deletePatientByEmail(String email) {
@@ -55,16 +64,4 @@ public class PatientService {
         return patientMapper.patientToPatientDTO(patientRepository.save(updatedPatient));
     }
 
-    public Patient updatePasswordByEmail(String email, String newPassword) {
-        Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
-        patient.setPassword(newPassword);
-        return patientRepository.save(patient);
-    }
-
-    private void checkEmailIsAvailable(String email) {
-        if (patientRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
-    }
 }

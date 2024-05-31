@@ -1,8 +1,8 @@
 package com.Kuba2412.medicalclinic.controller;
 
-import com.Kuba2412.medicalclinic.dto.PatientDTO;
+import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
 import lombok.RequiredArgsConstructor;
-import com.Kuba2412.medicalclinic.model.Patient;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +29,8 @@ public class PatientController {
     }
 
     @PostMapping
-    public Patient addPatient(@RequestBody Patient patient) {
-        return patientService.addPatient(patient);
+    public PatientDTO addPatient(@RequestParam String username, @RequestParam String password, @RequestBody PatientDTO patientDTO) {
+        return patientService.addPatient(username, password, patientDTO);
     }
 
     @DeleteMapping("/{email}")
@@ -44,9 +44,5 @@ public class PatientController {
         return patientService.updatePatientByEmail(email, patientDto);
     }
 
-    @PutMapping("/{email}/password")
-    public Patient updatePasswordByEmail(@PathVariable String email, @RequestBody String newPassword) {
-        return patientService.updatePasswordByEmail(email, newPassword);
-    }
 }
 
