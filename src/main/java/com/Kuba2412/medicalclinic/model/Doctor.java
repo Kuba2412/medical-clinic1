@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -31,4 +32,29 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(name = "institution_id")
     )
     private List<Institution> institutions;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization='" + specialization + '\'' +
+                '}';
+    }
 }

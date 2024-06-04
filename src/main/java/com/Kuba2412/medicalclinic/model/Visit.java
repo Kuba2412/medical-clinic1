@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -25,4 +26,27 @@ public class Visit {
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Visit visit = (Visit) o;
+        return Objects.equals(id, visit.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Visit{" +
+                "id=" + id +
+                ", startVisit=" + startVisit +
+                ", endVisit=" + endVisit +
+                ", patient=" + patient +
+                '}';
+    }
 }

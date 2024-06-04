@@ -1,4 +1,4 @@
-package com.Kuba2412.medicalclinic.mapper;
+package com.Kuba2412.medicalclinic.model.mapper;
 
 import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.model.dto.UserDTO;

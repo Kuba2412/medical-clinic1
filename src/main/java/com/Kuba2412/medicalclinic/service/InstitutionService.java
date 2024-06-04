@@ -1,6 +1,6 @@
 package com.Kuba2412.medicalclinic.service;
 
-import com.Kuba2412.medicalclinic.mapper.InstitutionMapper;
+import com.Kuba2412.medicalclinic.model.mapper.InstitutionMapper;
 import com.Kuba2412.medicalclinic.model.Doctor;
 import com.Kuba2412.medicalclinic.model.Institution;
 import com.Kuba2412.medicalclinic.model.dto.InstitutionDTO;

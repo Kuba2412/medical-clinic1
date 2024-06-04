@@ -1,5 +1,4 @@
-package com.Kuba2412.medicalclinic.mapper;
-
+package com.Kuba2412.medicalclinic.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimpleDoctorDTO {
-
-
+public class PatientDTO {
     private Long id;
+    private String email;
+    private String idCardNo;
     private String firstName;
     private String lastName;
-    private String specialization;
-
+    private String phoneNumber;
+    private String birthday;
 }
