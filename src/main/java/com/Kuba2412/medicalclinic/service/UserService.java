@@ -1,6 +1,5 @@
 package com.Kuba2412.medicalclinic.service;
 
-
 import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.repository.UserRepository;
 
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +21,6 @@ public class UserService {
         user.setPassword(password);
         return userRepository.save(user);
     }
-
 
     public User getUserId(Long id) {
         return userRepository.findById(id)

@@ -46,10 +46,8 @@ public class VisitService {
             throw new IllegalArgumentException("Visit already has registered patient.");
         }
 
-
         visit.setPatient(patient);
         visitRepository.save(visit);
-
     }
 
     private void validateVisitDateTime(LocalDateTime dateTime) {

@@ -27,6 +27,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
+        if (id == null || user.id == null) return false;
         return Objects.equals(id, user.id);
     }
 

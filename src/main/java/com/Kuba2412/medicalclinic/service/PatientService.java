@@ -17,17 +17,12 @@ import java.util.List;
 public class PatientService {
 
     private final PatientRepository patientRepository;
-    private final UserService userService;
     private final PatientMapper patientMapper;
 
     public PatientDTO getPatientDtoByEmail(String email) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
         return patientMapper.patientToPatientDTO(patient);
-    }
-    public Patient getPatientByEmail(String email) {
-        return patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
     }
 
     public List<PatientDTO> getPatientDtosByFirstName(String firstName) {
@@ -42,12 +37,8 @@ public class PatientService {
                 .toList();
     }
 
-    public PatientDTO addPatient(String username, String password, PatientDTO patientDTO) {
-        User user = userService.addUser(username, password);
-        Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-        patient.setUser(user);
-        patientRepository.save(patient);
-        return patientMapper.patientToPatientDTO(patient);
+    public Patient addPatient(Patient patient) {
+        return patientRepository.save(patient);
     }
 
     public void deletePatientByEmail(String email) {
@@ -63,5 +54,4 @@ public class PatientService {
         updatedPatient.setId(patient.getId());
         return patientMapper.patientToPatientDTO(patientRepository.save(updatedPatient));
     }
-
 }

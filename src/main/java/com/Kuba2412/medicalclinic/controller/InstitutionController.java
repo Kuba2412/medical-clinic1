@@ -7,11 +7,13 @@ import com.Kuba2412.medicalclinic.model.dto.InstitutionDTO;
 import com.Kuba2412.medicalclinic.service.InstitutionService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +21,6 @@ import java.util.List;
 public class InstitutionController {
 
     private final InstitutionService institutionService;
-    private final InstitutionMapper institutionMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -28,9 +29,11 @@ public class InstitutionController {
         return "Institution created successfully.";
     }
 
-    @GetMapping
-    public List<InstitutionDTO> getAllInstitutions() {
-        return institutionService.getAllInstitutions();
+    @GetMapping("/institutions")
+    public Page<InstitutionDTO> getAllInstitutions(@RequestParam int page,
+                                                   @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return institutionService.getAllInstitutions(pageable);
     }
 
     @GetMapping("/{institutionId}/doctors")

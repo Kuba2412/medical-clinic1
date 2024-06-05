@@ -8,6 +8,8 @@ import com.Kuba2412.medicalclinic.model.dto.DoctorDTO;
 import com.Kuba2412.medicalclinic.repository.DoctorRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +26,15 @@ public class DoctorService {
         doctorRepository.save(doctor);
     }
 
-    public List<DoctorDTO> getAllDoctors() {
-        return doctorRepository.findAll().stream()
-                .map(doctorMapper::toDoctorDTO)
-                .toList();
+    public Page<SimpleDoctorDTO> getAllDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable)
+                .map(doctorMapper::toSimpleDoctorDTO);
     }
 
-
-    public List<SimpleDoctorDTO> getAllSimpleDoctors() {
-        return doctorRepository.findAll().stream()
-                .map(doctorMapper::toSimpleDoctorDTO)
-                .toList();
-    }
+    public Page<SimpleDoctorDTO> getAllSimpleDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable)
+                .map(doctorMapper::toSimpleDoctorDTO);
+        }
 
     public List<Institution> getAssignedInstitutionsForDoctor(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId)
@@ -43,5 +42,3 @@ public class DoctorService {
         return doctor.getInstitutions();
     }
 }
-
-

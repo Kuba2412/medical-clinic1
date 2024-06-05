@@ -1,15 +1,14 @@
 package com.Kuba2412.medicalclinic.controller;
 
+import com.Kuba2412.medicalclinic.model.Patient;
 import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
 import lombok.RequiredArgsConstructor;
-
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.Kuba2412.medicalclinic.service.PatientService;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/patients")
@@ -24,13 +23,13 @@ public class PatientController {
     }
 
     @GetMapping
-    public List<PatientDTO> getPatientsByFirstName(@RequestParam(required = false) String firstName) {
+    public List<PatientDTO> getPatientsByFirstName(@RequestParam String firstName) {
         return patientService.getPatientDtosByFirstName(firstName);
     }
 
     @PostMapping
-    public PatientDTO addPatient(@RequestParam String username, @RequestParam String password, @RequestBody PatientDTO patientDTO) {
-        return patientService.addPatient(username, password, patientDTO);
+    public Patient addPatient(@RequestBody Patient patient) {
+        return patientService.addPatient(patient);
     }
 
     @DeleteMapping("/{email}")

@@ -4,13 +4,14 @@ import com.Kuba2412.medicalclinic.model.mapper.InstitutionMapper;
 import com.Kuba2412.medicalclinic.model.Doctor;
 import com.Kuba2412.medicalclinic.model.Institution;
 import com.Kuba2412.medicalclinic.model.dto.InstitutionDTO;
-
 import com.Kuba2412.medicalclinic.repository.InstitutionRepository;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +25,9 @@ public class InstitutionService {
         institutionRepository.save(institution);
     }
 
-    public List<InstitutionDTO> getAllInstitutions() {
-        return institutionRepository.findAll().stream()
-                .map(institutionMapper::toInstitutionDTO)
-                .toList();
+    public Page<InstitutionDTO> getAllInstitutions(Pageable pageable) {
+        return institutionRepository.findAll(pageable)
+                .map(institutionMapper::toInstitutionDTO);
     }
 
     public List<Doctor> getDoctorsForInstitution(Long institutionId) {
