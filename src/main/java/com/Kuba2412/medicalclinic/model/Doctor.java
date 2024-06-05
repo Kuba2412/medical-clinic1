@@ -1,6 +1,5 @@
 package com.Kuba2412.medicalclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,40 +9,38 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
-public class Patient {
+public class Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String email;
-
-    private String idCardNo;
+    private String password;
     private String firstName;
     private String lastName;
-    private String phoneNumber;
-    private String birthday;
+    private String specialization;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-
-    private List<Visit> visits;
+    @ManyToMany
+    @JoinTable(
+            name = "doctor_institution",
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "institution_id")
+    )
+    private List<Institution> institutions;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id);
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id);
     }
+
 
     @Override
     public int hashCode() {
@@ -52,17 +49,12 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "Patient{" +
+        return "Doctor{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", idCardNo='" + idCardNo + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", user=" + user +
-                ", visits=" + visits +
+                ", specialization='" + specialization + '\'' +
                 '}';
     }
 }
-
