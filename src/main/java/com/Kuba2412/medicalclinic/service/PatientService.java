@@ -2,15 +2,16 @@ package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.model.mapper.PatientMapper;
 import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
-import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.repository.PatientRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.Kuba2412.medicalclinic.model.Patient;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +26,15 @@ public class PatientService {
         return patientMapper.patientToPatientDTO(patient);
     }
 
-    public List<PatientDTO> getPatientDtosByFirstName(String firstName) {
-        List<Patient> patients;
+    @Transactional
+    public List<PatientDTO> getPatientDtosByFirstName(String firstName, Pageable pageable) {
+        Page<Patient> patientsPage;
         if (firstName != null) {
-            patients = patientRepository.findByFirstName(firstName);
+            patientsPage = patientRepository.findByFirstName(firstName, pageable);
         } else {
-            patients = patientRepository.findAll();
+            patientsPage = patientRepository.findAll(pageable);
         }
-        return patients.stream()
+        return patientsPage.getContent().stream()
                 .map(patientMapper::patientToPatientDTO)
                 .toList();
     }

@@ -6,8 +6,8 @@ import com.Kuba2412.medicalclinic.model.Institution;
 import com.Kuba2412.medicalclinic.model.dto.InstitutionDTO;
 import com.Kuba2412.medicalclinic.repository.InstitutionRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,18 @@ public class InstitutionService {
     private final InstitutionRepository institutionRepository;
     private final InstitutionMapper institutionMapper;
 
+    @Transactional
     public void createInstitution(InstitutionDTO institutionDTO) {
         Institution institution = institutionMapper.toInstitution(institutionDTO);
         institutionRepository.save(institution);
     }
 
-    public Page<InstitutionDTO> getAllInstitutions(Pageable pageable) {
-        return institutionRepository.findAll(pageable)
-                .map(institutionMapper::toInstitutionDTO);
+    @Transactional
+    public List<InstitutionDTO> getAllInstitutions(Pageable pageable) {
+        List<Institution> institutions = institutionRepository.findAll(pageable).getContent();
+        return institutions.stream()
+                .map(institutionMapper::toInstitutionDTO)
+                .toList();
     }
 
     public List<Doctor> getDoctorsForInstitution(Long institutionId) {
