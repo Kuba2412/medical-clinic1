@@ -3,6 +3,7 @@ package com.Kuba2412.medicalclinic.controller;
 import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<User> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     @PutMapping("/{username}/password")

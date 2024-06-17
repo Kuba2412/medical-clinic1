@@ -4,6 +4,7 @@ import com.Kuba2412.medicalclinic.model.Patient;
 import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.Kuba2412.medicalclinic.service.PatientService;
@@ -23,8 +24,8 @@ public class PatientController {
     }
 
     @GetMapping
-    public List<PatientDTO> getPatientsByFirstName(@RequestParam String firstName) {
-        return patientService.getPatientDtosByFirstName(firstName);
+    public List<PatientDTO> getPatientsByFirstName(@RequestParam  String firstName, Pageable pageable) {
+        return patientService.getPatientDtosByFirstName(firstName, pageable);
     }
 
     @PostMapping
