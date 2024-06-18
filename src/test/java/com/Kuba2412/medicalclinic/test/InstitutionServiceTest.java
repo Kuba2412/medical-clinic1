@@ -67,6 +67,17 @@ public class InstitutionServiceTest {
         assertNotNull(result);
         assertEquals(doctors.size(), result.size());
     }
+
+    @Test
+    void getDoctorsForInstitution_NonExsistentInstitution_IllegalArgumentExceptionThrown() {
+        // given
+        Long nonExsistenInstituionId = 12345L;
+
+        // when + then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> institutionService.getDoctorsForInstitution(nonExsistenInstituionId));
+        assertEquals("Institution not found.", exception.getMessage());
+        verify(institutionRepository, times(1)).findById(nonExsistenInstituionId);
+    }
 }
 
 

@@ -24,9 +24,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PatientServiceTest {
 
@@ -53,7 +55,19 @@ public class PatientServiceTest {
 
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(patientEmail, result.getEmail());
+        assertEquals(patientEmail, result.getEmail());
+    }
+
+    @Test
+    void getPatientDtoByEmail_NonExsistentEmail_IllegalArgumentExceptionThrown() {
+        // given
+        String nonExsistentEmail = "kp123@gmail.com";
+
+        // when + then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> patientService.getPatientDtoByEmail(nonExsistentEmail));
+        assertEquals("Patient not found.", exception.getMessage());
+        verify(patientRepository, times(1)).findByEmail(nonExsistentEmail);
+
     }
 
     @Test
@@ -70,9 +84,9 @@ public class PatientServiceTest {
 
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals("john1@example.com", result.get(0).getEmail());
-        Assertions.assertEquals("john2@example.com", result.get(1).getEmail());
+        assertEquals(2, result.size());
+        assertEquals("kuba1@gmail.com", result.get(0).getEmail());
+        assertEquals("kuba2@gmail.com", result.get(1).getEmail());
     }
 
     @Test
@@ -86,7 +100,7 @@ public class PatientServiceTest {
 
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("newpatient@gmail.com", result.getEmail());
+        assertEquals("newpatient@gmail.com", result.getEmail());
     }
 
     @Test
@@ -107,9 +121,27 @@ public class PatientServiceTest {
 
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("UpdatedFirstName", result.getFirstName());
-        Assertions.assertEquals("UpdatedLastName", result.getLastName());
-        Assertions.assertEquals("123456789", result.getPhoneNumber());
+        assertEquals("UpdatedFirstName", result.getFirstName());
+        assertEquals("UpdatedLastName", result.getLastName());
+        assertEquals("123456789", result.getPhoneNumber());
+    }
+
+    @Test
+    void updatePatientByEmail_NonExsistentEmail_IllegalArgumentExceptionThrown() {
+        // given
+        String nonExsistentEmail1 = "kp12345@gmail.com";
+        PatientDTO newPatientDto = new PatientDTO();
+
+        newPatientDto.setEmail(nonExsistentEmail1);
+        newPatientDto.setFirstName("UpdatedFirstName");
+        newPatientDto.setLastName("UpdatedLastName");
+        newPatientDto.setPhoneNumber("123456789");
+        when(patientRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        // when + then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> patientService.updatePatientByEmail(nonExsistentEmail1, newPatientDto));
+        assertEquals("Patient not found.", exception.getMessage());
+        verify(patientRepository, times(1)).findByEmail(nonExsistentEmail1);
     }
 
     private Patient createPatient(String email) {

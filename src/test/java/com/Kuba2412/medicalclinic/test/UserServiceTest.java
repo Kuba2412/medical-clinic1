@@ -66,6 +66,7 @@ public class UserServiceTest {
         assertEquals(userId, result.getId());
     }
 
+
     @Test
     void getUserId_UserDoesNotExist_ExceptionThrown() {
         // given
