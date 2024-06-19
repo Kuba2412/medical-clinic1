@@ -104,6 +104,35 @@ public class PatientServiceTest {
     }
 
     @Test
+    void deletePatientByEmail_PatientExists_PatientDeleted() {
+        // given
+        String patientEmail = "patient@gmail.com";
+        Patient patient = new Patient();
+        patient.setEmail(patientEmail);
+        when(patientRepository.findByEmail(patientEmail)).thenReturn(Optional.of(patient));
+
+        // when
+        patientService.deletePatientByEmail(patientEmail);
+
+        // then
+        verify(patientRepository, times(1)).findByEmail(patientEmail);
+        verify(patientRepository, times(1)).delete(patient);
+    }
+
+    @Test
+    void deletePatientByEmail_PatientNotFound_ThrowsException() {
+        // given
+        String patientEmail2 = "nonexistentpatient@gmail.com";
+        when(patientRepository.findByEmail(patientEmail2)).thenReturn(Optional.empty());
+
+        // when + then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> patientService.deletePatientByEmail(patientEmail2));
+        assertEquals("Patient not found.", exception.getMessage());
+        verify(patientRepository, times(1)).findByEmail(patientEmail2);
+        verify(patientRepository, never()).delete(any(Patient.class));
+    }
+
+    @Test
     void updatePatientByEmail_PatientExists_PatientUpdated() {
         // given
         String patientEmail = "updatepatient@gmail.com";
