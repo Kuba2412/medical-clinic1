@@ -1,4 +1,4 @@
-package com.Kuba2412.medicalclinic.test;
+package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.model.Patient;
 
@@ -6,7 +6,6 @@ import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
 import com.Kuba2412.medicalclinic.model.mapper.PatientMapper;
 import com.Kuba2412.medicalclinic.repository.PatientRepository;
 
-import com.Kuba2412.medicalclinic.service.PatientService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

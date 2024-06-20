@@ -18,7 +18,7 @@ import java.util.List;
 public class DoctorController {
 
     private final DoctorService doctorService;
-
+ 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String createDoctor(@RequestBody DoctorDTO doctorDTO) {

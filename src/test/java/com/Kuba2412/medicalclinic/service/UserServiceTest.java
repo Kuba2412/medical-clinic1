@@ -1,8 +1,7 @@
-package com.Kuba2412.medicalclinic.test;
+package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.model.User;
 import com.Kuba2412.medicalclinic.repository.UserRepository;
-import com.Kuba2412.medicalclinic.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

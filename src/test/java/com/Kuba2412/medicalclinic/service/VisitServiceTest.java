@@ -1,11 +1,10 @@
-package com.Kuba2412.medicalclinic.test;
+package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.model.Patient;
 import com.Kuba2412.medicalclinic.model.Visit;
 import com.Kuba2412.medicalclinic.model.mapper.VisitMapper;
 import com.Kuba2412.medicalclinic.repository.PatientRepository;
 import com.Kuba2412.medicalclinic.repository.VisitRepository;
-import com.Kuba2412.medicalclinic.service.VisitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

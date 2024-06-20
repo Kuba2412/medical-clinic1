@@ -2,7 +2,6 @@ package com.Kuba2412.medicalclinic.controller;
 
 import com.Kuba2412.medicalclinic.model.Doctor;
 import com.Kuba2412.medicalclinic.model.dto.InstitutionDTO;
-import com.Kuba2412.medicalclinic.repository.InstitutionRepository;
 import com.Kuba2412.medicalclinic.service.InstitutionService;
 
 import lombok.RequiredArgsConstructor;
