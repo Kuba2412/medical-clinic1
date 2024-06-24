@@ -123,4 +123,3 @@ public class DoctorControllerTest {
                 .andExpect(content().string("Doctor not found."));
     }
 }
-
