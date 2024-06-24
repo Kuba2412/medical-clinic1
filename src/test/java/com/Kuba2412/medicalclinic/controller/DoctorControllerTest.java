@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,6 +52,7 @@ public class DoctorControllerTest {
         simpleDoctorDTO.setLastName("Ppp");
 
         institution = new Institution();
+        institution.setId(1L);
         institution.setName("Szpital 1");
     }
 
@@ -66,35 +67,49 @@ public class DoctorControllerTest {
 
     @Test
     void getAllDoctors_DoctorsExist_DoctorsReturned() throws Exception {
-        List<SimpleDoctorDTO> doctors = Arrays.asList(simpleDoctorDTO);
+
+        SimpleDoctorDTO doctorDTO = new SimpleDoctorDTO();
+        doctorDTO.setFirstName("Kuba");
+        doctorDTO.setLastName("Ppp");
+        List<SimpleDoctorDTO> doctors = List.of(doctorDTO);
+
         when(doctorService.getAllDoctors(any())).thenReturn(doctors);
 
         mockMvc.perform(get("/doctors")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(doctors.size()));
+                .andExpect(jsonPath("$.size()").value(doctors.size()))
+                .andExpect(jsonPath("$[0].firstName").value("Kuba"))
+                .andExpect(jsonPath("$[0].lastName").value("Ppp"));
     }
 
     @Test
     void getAllSimpleDoctors_DoctorsExist_DoctorsReturned() throws Exception {
-        List<SimpleDoctorDTO> doctors = Arrays.asList(simpleDoctorDTO);
+        List<SimpleDoctorDTO> doctors = List.of(simpleDoctorDTO);
         when(doctorService.getAllSimpleDoctors(any())).thenReturn(doctors);
 
         mockMvc.perform(get("/doctors/simple")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(doctors.size()));
+                .andExpect(jsonPath("$.size()").value(doctors.size()))
+                .andExpect(jsonPath("$[0].firstName").value("Kuba"))
+                .andExpect(jsonPath("$[0].lastName").value("Ppp"));
+
+        verify(doctorService, times(1)).getAllSimpleDoctors(any());
     }
 
     @Test
     void getAssignedInstitutionsForDoctor_DoctorExists_InstitutionsReturned() throws Exception {
-        List<Institution> institutions = Arrays.asList(institution);
+        List<Institution> institutions = List.of(institution);
         when(doctorService.getAssignedInstitutionsForDoctor(anyLong())).thenReturn(institutions);
 
         mockMvc.perform(get("/doctors/1/institutions")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(institutions.size()));
+                .andExpect(jsonPath("$.size()").value(institutions.size()))
+                .andExpect(jsonPath("$[0].name").value(institution.getName()));
+
+        verify(doctorService, times(1)).getAssignedInstitutionsForDoctor(1L);
     }
 
     @Test
