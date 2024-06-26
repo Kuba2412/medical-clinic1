@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -59,6 +59,17 @@ public class InstitutionControllerTest {
                         .content(objectMapper.writeValueAsString(institutionDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Institution created successfully."));
+    }
+
+    @Test
+    void createInstitution_InvalidInput_BadRequest() throws Exception {
+        InstitutionDTO invalidInstitutionDTO = new InstitutionDTO();
+
+        mockMvc.perform(post("/institutions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidInstitutionDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid institution data."));
     }
 
     @Test

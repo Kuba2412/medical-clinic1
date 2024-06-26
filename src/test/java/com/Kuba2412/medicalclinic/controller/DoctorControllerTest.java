@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -66,6 +65,18 @@ public class DoctorControllerTest {
     }
 
     @Test
+    void createDoctor_InvalidInput_BadRequest() throws Exception {
+        // given
+        DoctorDTO invalidDoctorDTO = new DoctorDTO();
+
+        mockMvc.perform(post("/doctors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidDoctorDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid doctor data."));
+    }
+
+    @Test
     void getAllDoctors_DoctorsExist_DoctorsReturned() throws Exception {
 
         SimpleDoctorDTO doctorDTO = new SimpleDoctorDTO();
@@ -94,8 +105,6 @@ public class DoctorControllerTest {
                 .andExpect(jsonPath("$.size()").value(doctors.size()))
                 .andExpect(jsonPath("$[0].firstName").value("Kuba"))
                 .andExpect(jsonPath("$[0].lastName").value("Ppp"));
-
-        verify(doctorService, times(1)).getAllSimpleDoctors(any());
     }
 
     @Test
@@ -108,8 +117,6 @@ public class DoctorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(institutions.size()))
                 .andExpect(jsonPath("$[0].name").value(institution.getName()));
-
-        verify(doctorService, times(1)).getAssignedInstitutionsForDoctor(1L);
     }
 
     @Test

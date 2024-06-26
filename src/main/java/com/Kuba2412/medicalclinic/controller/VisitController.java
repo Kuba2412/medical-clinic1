@@ -2,7 +2,7 @@ package com.Kuba2412.medicalclinic.controller;
 
 
 import com.Kuba2412.medicalclinic.model.Visit;
-import com.Kuba2412.medicalclinic.model.mapper.VisitMapper;
+
 import com.Kuba2412.medicalclinic.model.dto.VisitDTO;
 import com.Kuba2412.medicalclinic.service.VisitService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import java.util.List;
 public class VisitController {
 
     private final VisitService visitService;
-    private final VisitMapper visitMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

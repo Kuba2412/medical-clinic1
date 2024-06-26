@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -121,6 +122,22 @@ public class InstitutionServiceTest {
         assertEquals(institution2.getBuildingNumber(), resultInstitution2.getBuildingNumber());
 
         verify(institutionMapper, times(institutions.size())).toInstitutionDTO(any(Institution.class));
+    }
+
+    @Test
+    void getAllInstitutions_NoInstitutionsExist_EmptyListReturned() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Institution> institutionPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
+        when(institutionRepository.findAll(pageable)).thenReturn(institutionPage);
+
+        // when
+        List<InstitutionDTO> result = institutionService.getAllInstitutions(pageable);
+
+        // then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(institutionMapper, never()).toInstitutionDTO(any(Institution.class));
     }
 
     @Test

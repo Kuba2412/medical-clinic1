@@ -14,9 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -107,6 +105,23 @@ public class DoctorServiceTest {
     }
 
     @Test
+    void getAllDoctors_NoDoctorsExist_EmptyListReturned() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Doctor> doctorPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
+        when(doctorRepository.findAll(pageable)).thenReturn(doctorPage);
+
+        // when
+        List<SimpleDoctorDTO> result = doctorService.getAllDoctors(pageable);
+
+        // then
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(doctorMapper, never()).toSimpleDoctorDTO(any(Doctor.class));
+    }
+
+    @Test
     void getAllSimpleDoctors_DoctorsExist_DoctorsReturned() {
         // given
         Pageable pageable = PageRequest.of(0, 10);
@@ -121,6 +136,22 @@ public class DoctorServiceTest {
         assertNotNull(result);
         assertEquals(doctors.size(), result.size());
         verify(doctorMapper, times(doctors.size())).toSimpleDoctorDTO(any(Doctor.class));
+    }
+
+    @Test
+    void getAllSimpleDoctors_NoDoctorsExist_EmptyListReturned() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Doctor> doctorPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
+        when(doctorRepository.findAll(pageable)).thenReturn(doctorPage);
+
+        // when
+        List<SimpleDoctorDTO> result = doctorService.getAllSimpleDoctors(pageable);
+
+        // then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(doctorMapper, never()).toSimpleDoctorDTO(any(Doctor.class));
     }
 
     @Test

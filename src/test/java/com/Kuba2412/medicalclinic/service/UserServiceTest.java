@@ -65,7 +65,6 @@ public class UserServiceTest {
         assertEquals(userId, result.getId());
     }
 
-
     @Test
     void getUserId_UserDoesNotExist_ExceptionThrown() {
         // given
@@ -111,5 +110,23 @@ public class UserServiceTest {
         assertNotNull(result);
         assertEquals(newPassword, result.getPassword());
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+
+    @Test
+    void updatePassword_UserNotFound_ThrowsException() {
+        // given
+        String username = "nonExistingUser";
+        String newPassword = "newPassword";
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        // when
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.updatePassword(username, newPassword);
+        });
+
+        // then
+        assertEquals("User not found.", exception.getMessage());
+        Mockito.verify(userRepository, Mockito.times(1)).findByUsername(username);
+        Mockito.verify(userRepository, Mockito.times(0)).save(any(User.class));
     }
 }

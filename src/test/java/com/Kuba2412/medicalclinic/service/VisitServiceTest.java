@@ -2,6 +2,7 @@ package com.Kuba2412.medicalclinic.service;
 
 import com.Kuba2412.medicalclinic.model.Patient;
 import com.Kuba2412.medicalclinic.model.Visit;
+import com.Kuba2412.medicalclinic.model.dto.VisitDTO;
 import com.Kuba2412.medicalclinic.model.mapper.VisitMapper;
 import com.Kuba2412.medicalclinic.repository.PatientRepository;
 import com.Kuba2412.medicalclinic.repository.VisitRepository;
@@ -34,6 +35,55 @@ public class VisitServiceTest {
         patientRepository = Mockito.mock(PatientRepository.class);
         visitMapper = Mockito.mock(VisitMapper.class);
         visitService = new VisitService(visitRepository, patientRepository, visitMapper);
+    }
+
+    @Test
+    void createVisit_ValidInput_VisitCreated() {
+        // given
+        LocalDateTime startVisit = LocalDateTime.now().plusDays(1);
+        LocalDateTime endVisit = startVisit.plusHours(1);
+
+        VisitDTO visitDTO = new VisitDTO();
+        visitDTO.setStartVisit(startVisit);
+        visitDTO.setEndVisit(endVisit);
+
+        Visit visit = new Visit();
+        visit.setStartVisit(startVisit);
+        visit.setEndVisit(endVisit);
+
+        when(visitMapper.visitDTOToVisit(visitDTO)).thenReturn(visit);
+        when(visitRepository.save(any(Visit.class))).thenReturn(visit);
+
+        // when
+        visitService.createVisit(visitDTO);
+
+        // then
+        verify(visitMapper, times(1)).visitDTOToVisit(visitDTO);
+        verify(visitRepository, times(1)).save(visit);
+    }
+
+    @Test
+    void createVisit_InvalidStartDate_ThrowsException() {
+        // given
+        LocalDateTime invalidStartVisit = LocalDateTime.now().minusDays(1);
+        LocalDateTime endVisit = LocalDateTime.now();
+
+        VisitDTO visitDTO = new VisitDTO();
+        visitDTO.setStartVisit(invalidStartVisit);
+        visitDTO.setEndVisit(endVisit);
+
+        Visit visit = new Visit();
+        visit.setStartVisit(invalidStartVisit);
+        visit.setEndVisit(endVisit);
+
+        when(visitMapper.visitDTOToVisit(visitDTO)).thenReturn(visit);
+
+        // when + then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> visitService.createVisit(visitDTO));
+        assertEquals("Invalid visit start date.", exception.getMessage());
+
+        verify(visitMapper, times(1)).visitDTOToVisit(visitDTO);
+        verify(visitRepository, never()).save(any(Visit.class));
     }
 
     @Test
@@ -78,6 +128,23 @@ public class VisitServiceTest {
         assertEquals(visit2.getId(), resultVisit2.getId());
         assertEquals(visit2.getStartVisit(), resultVisit2.getStartVisit());
         assertEquals(visit2.getEndVisit(), resultVisit2.getEndVisit());
+    }
+
+    @Test
+    void getAllVisitsForPatient_NoVisitsExist_EmptyListReturned() {
+        // given
+        Long patientId = 1L;
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Visit> emptyPage = Page.empty(pageable);
+        when(visitRepository.findAllByPatientId(patientId, pageable)).thenReturn(emptyPage);
+
+        // when
+        List<Visit> result = visitService.getAllVisitsForPatient(patientId, pageable);
+
+        // then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(visitRepository, times(1)).findAllByPatientId(patientId, pageable);
     }
 
     @Test
