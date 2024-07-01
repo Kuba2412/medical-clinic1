@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: Long
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -33,3 +33,36 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 4.1
+      author: Kuba
+      changes:
+        - createTable:
+          tableName: doctor_institution
+          columns:
+            - column:
+              name: doctor_id
+              type: BIGINT
+              constraints:
+                nullable: false
+            - column:
+              name: institution_id
+              type: BIGINT
+              constraints:
+                nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: doctor_institution
+            baseColumnNames: doctor_id
+            constraintName: fk_doctor_institution_doctor
+            referencedTableName: doctor
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: doctor_institution
+            baseColumnNames: institution_id
+            constraintNames: fk_doctor_institution_institution
+            referencedTableName: institution
+            referencedColumnNames: id
+
+
+
+
