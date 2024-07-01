@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Kuba
+      changes:
+        - createTable:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  name: id
+                  type: Long
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialization
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

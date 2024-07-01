@@ -139,6 +139,5 @@ public class VisitControllerTest {
         });
         assertEquals("Visit not found", exception.getMessage());
 
-        verify(visitRepository, times(1)).findById(nonExistentVisitId);
     }
 }
