@@ -12,6 +12,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    primaryKeyName: pk_patient_id
                     nullable: false
               - column:
                   name: email
@@ -40,7 +41,7 @@ databaseChangeLog:
               - column:
                   name: user_id
                   type: BIGINT
-                  foreignKey:
-                    name: fk_patient_user
-                    references: User(id)
-                    onDelete: CASCADE
+
+
+
+

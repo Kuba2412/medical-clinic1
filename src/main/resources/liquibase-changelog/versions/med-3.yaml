@@ -12,6 +12,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    primaryKeyName: pk_visit_id
                     nullable: false
               - column:
                   name: start_visit
@@ -26,7 +27,10 @@ databaseChangeLog:
               - column:
                   name: patient_id
                   type: BIGINT
-                  foreignKey:
-                    name: fk_visit_patient
-                    references: patient(id)
-                    onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: VISIT
+            baseColumnNames: patient_id
+            constraintName: fk_visit_patient
+            referencedTableName: PATIENT
+            referencedColumnNames: id
+            onDelete: CASCADE
