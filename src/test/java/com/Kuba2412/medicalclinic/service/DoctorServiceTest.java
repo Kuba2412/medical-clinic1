@@ -60,7 +60,7 @@ public class DoctorServiceTest {
         DoctorDTO doctorDTO = null;
 
         // when + then
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> doctorService.createDoctor(doctorDTO));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> doctorService.createDoctor(doctorDTO));
         assertEquals("Doctor can't be null.", exception.getMessage());
         verify(doctorMapper, never()).toDoctor(any(DoctorDTO.class));
         verify(doctorRepository, never()).save(any(Doctor.class));
@@ -82,9 +82,21 @@ public class DoctorServiceTest {
         doctor2.setLastName("Sss");
         doctor2.setSpecialization("Neurologia");
 
+        SimpleDoctorDTO simpleDoctorDTO1 = new SimpleDoctorDTO();
+        simpleDoctorDTO1.setFirstName("Kuba");
+        simpleDoctorDTO1.setLastName("Ppp");
+        simpleDoctorDTO1.setSpecialization("Kardiologia");
+
+        SimpleDoctorDTO simpleDoctorDTO2 = new SimpleDoctorDTO();
+        simpleDoctorDTO2.setFirstName("Anna");
+        simpleDoctorDTO2.setLastName("Sss");
+        simpleDoctorDTO2.setSpecialization("Neurologia");
+
         List<Doctor> doctors = Arrays.asList(doctor1, doctor2);
         Page<Doctor> doctorPage = new PageImpl<>(doctors, pageable, doctors.size());
         when(doctorRepository.findAll(pageable)).thenReturn(doctorPage);
+        when(doctorMapper.toSimpleDoctorDTO(doctor1)).thenReturn(simpleDoctorDTO1);
+        when(doctorMapper.toSimpleDoctorDTO(doctor2)).thenReturn(simpleDoctorDTO2);
 
         // when
         List<SimpleDoctorDTO> result = doctorService.getAllDoctors(pageable);
@@ -205,13 +217,15 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void getAssignedInstitutionsForDoctor_NonExistentDoctor_IllegalArhumentExceptionThrown() {
+    void getAssignedInstitutionsForDoctor_NonExistentDoctor_IllegalArgumentExceptionThrown() {
         // given
-        Long nonExsitenId = 12345L;
+        Long nonExistentId = 12345L;
+
+        when(doctorRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
         // when + then
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> doctorService.getAssignedInstitutionsForDoctor(nonExsitenId));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> doctorService.getAssignedInstitutionsForDoctor(nonExistentId));
         assertEquals("Doctor not found.", exception.getMessage());
-        verify(doctorRepository, times(1)).findById(nonExsitenId);
+        verify(doctorRepository, times(1)).findById(nonExistentId);
     }
 }

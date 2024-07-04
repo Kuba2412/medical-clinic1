@@ -8,11 +8,14 @@ import com.Kuba2412.medicalclinic.service.VisitService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class VisitController {
     }
 
     @GetMapping("/patient/{patientId}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all visits for a patient")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of visits returned successfully"),

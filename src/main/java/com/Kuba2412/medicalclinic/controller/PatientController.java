@@ -5,12 +5,15 @@ import com.Kuba2412.medicalclinic.model.dto.PatientDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.Kuba2412.medicalclinic.service.PatientService;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class PatientController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add a new patient", description = "Create a new patient record.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Patient created successfully"),
@@ -62,13 +66,14 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update patient by email", description = "Update a patient's information by their email address.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Patient updated successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public PatientDTO updatePatientByEmail(@PathVariable("email") String email, @RequestBody PatientDTO patientDto) {
+    public PatientDTO updatePatientByEmail(@PathVariable("email") String email, @RequestBody @Valid PatientDTO patientDto) {
         return patientService.updatePatientByEmail(email, patientDto);
     }
 }

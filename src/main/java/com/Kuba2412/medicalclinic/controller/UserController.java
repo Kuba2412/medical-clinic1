@@ -5,10 +5,13 @@ import com.Kuba2412.medicalclinic.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,7 +40,11 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     public User getUserId(@PathVariable Long id) {
-        return userService.getUserId(id);
+        try {
+            return userService.getUserId(id);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping
@@ -50,6 +57,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}/password")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update user password", description = "Update the password of an existing user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Password updated successfully"),

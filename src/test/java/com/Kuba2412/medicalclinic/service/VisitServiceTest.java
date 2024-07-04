@@ -40,7 +40,7 @@ public class VisitServiceTest {
     @Test
     void createVisit_ValidInput_VisitCreated() {
         // given
-        LocalDateTime startVisit = LocalDateTime.now().plusDays(1);
+        LocalDateTime startVisit = LocalDateTime.now().plusDays(1).withMinute(0);
         LocalDateTime endVisit = startVisit.plusHours(1);
 
         VisitDTO visitDTO = new VisitDTO();
@@ -80,7 +80,7 @@ public class VisitServiceTest {
 
         // when + then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> visitService.createVisit(visitDTO));
-        assertEquals("Invalid visit start date.", exception.getMessage());
+        assertEquals("Cannot create visit for past date.", exception.getMessage());
 
         verify(visitMapper, times(1)).visitDTOToVisit(visitDTO);
         verify(visitRepository, never()).save(any(Visit.class));
@@ -152,7 +152,7 @@ public class VisitServiceTest {
         // given
         Long visitId = 1L;
         Long patientId = 1L;
-        LocalDateTime futureVisitDate = LocalDateTime.of(2025, 1, 1, 10, 0);
+        LocalDateTime futureVisitDate = LocalDateTime.of(2025, 1, 1, 10, 0).withMinute(0);
         Visit visit = new Visit();
         visit.setStartVisit(futureVisitDate);
         Patient patient = new Patient();
@@ -186,7 +186,7 @@ public class VisitServiceTest {
         // given
         Long visitId = 1L;
         Long patientId = 12345L;
-        LocalDateTime futureVisitDate = LocalDateTime.of(2025, 1, 1, 10, 0);
+        LocalDateTime futureVisitDate = LocalDateTime.of(2025, 1, 1, 10, 0).withMinute(0);
         Visit visit = new Visit();
         visit.setStartVisit(futureVisitDate);
         when(visitRepository.findById(visitId)).thenReturn(Optional.of(visit));

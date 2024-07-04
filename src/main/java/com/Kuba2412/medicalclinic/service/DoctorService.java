@@ -22,7 +22,7 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
 
     /**
-     *   Test Case 1: Poprawne dane dla Doctor
+     * Test Case 1: Poprawne dane dla Doctor
      * - Opis: Sprawdza czy Doctor jest poprawnie tworzony, gdy dane są prawidłowe
      * - Kroki:
      * 1. Utwórz obiekt z poprawnymi danymi dla DoctorDTO
@@ -30,23 +30,25 @@ public class DoctorService {
      * 3. powiedz co ma zwrócic metoda toDctor z doctorMapper
      * 4. Sprawdź czy została wywołana metoda save z doctorRepository
      * - Wynik: Doctor jest poprawnie zapisany w bazie danych.
-      **/
+     **/
 
-    @Transactional
     public void createDoctor(DoctorDTO doctorDTO) {
+        if (doctorDTO == null) {
+            throw new IllegalArgumentException("Doctor can't be null.");
+        }
         Doctor doctor = doctorMapper.toDoctor(doctorDTO);
         doctorRepository.save(doctor);
     }
 
     /**
      * Test case 1: Pobieranie wszystkich lekarzy z paginacją
-
+     * <p>
      * - Opis: Sprawdza, czy metoda getAllDoctors zwraca listę wszystkich lekarzy z paginacją.
      * - Kroki:
-     *   1. Utwórz kilku lekarzy i dodaj ich do bazy danych.
-     *   2. Utwórz obiekt Pageable z ustawioną paginacją (np. PageRequest.of(0, 10)).
-     *   3. Wywołaj metodę getAllDoctors z obiektem Pageable.
-     *   4. Sprawdź czy lista instytucji zawiera oczekiwaną liczbę elementów (np. 10).
+     * 1. Utwórz kilku lekarzy i dodaj ich do bazy danych.
+     * 2. Utwórz obiekt Pageable z ustawioną paginacją (np. PageRequest.of(0, 10)).
+     * 3. Wywołaj metodę getAllDoctors z obiektem Pageable.
+     * 4. Sprawdź czy lista instytucji zawiera oczekiwaną liczbę elementów (np. 10).
      * - Wynik: Metoda zwraca poprawnie paginowaną listę wszystkich lekarzy w formacie SimpleDoctorDTO.
      */
 
@@ -60,13 +62,13 @@ public class DoctorService {
 
     /**
      * Test case 1: Pobieranie wszystkich prostych danych lekarzy z paginacją
-
+     * <p>
      * - Opis: Sprawdza, czy metoda getAllSimpleDoctors zwraca listę wszystkich lekarzy w formacie SimpleDoctorDTO z paginacją.
      * - Kroki:
-     *   1. Utwórz kilku lekarzy i dodaj ich do bazy danych.
-     *   2. Utwórz obiekt Pageable z ustawioną paginacją (np. PageRequest.of(0, 10)).
-     *   3. Wywołaj metodę getAllSimpleDoctors z obiektem Pageable.
-     *   4. Sprawdź czy lista instytucji zawiera oczekiwaną liczbę elementów (np. 10).
+     * 1. Utwórz kilku lekarzy i dodaj ich do bazy danych.
+     * 2. Utwórz obiekt Pageable z ustawioną paginacją (np. PageRequest.of(0, 10)).
+     * 3. Wywołaj metodę getAllSimpleDoctors z obiektem Pageable.
+     * 4. Sprawdź czy lista instytucji zawiera oczekiwaną liczbę elementów (np. 10).
      * - Wynik: Metoda zwraca poprawnie paginowaną listę prostych danych lekarzy.
      */
 
@@ -78,7 +80,6 @@ public class DoctorService {
 
     /**
      * Test Case 1: Poprawne ID lekarza dla getAssignedInstitutionsForDoctor
-
      * - Opis: Sprawdza poprawność pobierania przypisanych instytucji dla lekarza na podstawie jego identyfikatora.
      * - Kroki:
      *   1. Utwórz obiekt Doctor o znanym identyfikatorze.
@@ -90,22 +91,20 @@ public class DoctorService {
 
     /**
      * Test case 2: Niepoprawne ID lekarza
-
+     * <p>
      * - Opis: Sprawdza działanie metody getAssignedInstitutionsForDoctor na niepoprawny identyfikator lekarza.
      * - Kroki:
-     *   1. Utwórz identyfikator lekarza, który nie istnieje w bazie danych.
-     *   2. Kiedy zostanie wywołana metoda getAssignedInstitutionsForDoctor z niepoprawnym identyfikatorem lekarza,
-     *      oczekuj zgłoszenia wyjątku IllegalArgumentException.
-     *   3. Sprawdź czy został rzucony wyjątek IllegalArgumentException.
-     *   4. Upewnij się, że metoda findById z doctorRepository została wywołana z danym identyfikatorem.
+     * 1. Utwórz identyfikator lekarza, który nie istnieje w bazie danych.
+     * 2. Kiedy zostanie wywołana metoda getAssignedInstitutionsForDoctor z niepoprawnym identyfikatorem lekarza,
+     * oczekuj zgłoszenia wyjątku IllegalArgumentException.
+     * 3. Sprawdź czy został rzucony wyjątek IllegalArgumentException.
+     * 4. Upewnij się, że metoda findById z doctorRepository została wywołana z danym identyfikatorem.
      * - Wynik: Metoda powinna rzucać wyjątek, gdy identyfikator lekarza nie istnieje.
      */
 
-    @Transactional
     public List<Institution> getAssignedInstitutionsForDoctor(Long doctorId) {
-        Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
-        return doctor.getInstitutions();
+        return doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found."))
+                .getInstitutions();
     }
-
 }
