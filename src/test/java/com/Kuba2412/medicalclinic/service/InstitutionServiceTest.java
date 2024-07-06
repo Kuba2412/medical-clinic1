@@ -60,17 +60,17 @@ public class InstitutionServiceTest {
         verify(institutionRepository, times(1)).save(institution);
     }
 
-//    @Test
-//    void createInstitution_NullInstitutionDTO_ThrowsException() {
-//        // given
-//        InstitutionDTO institutionDTO = null;
-//
-//        // when + then
-//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> institutionService.createInstitution(institutionDTO));
-//        assertEquals("Institution can't be null.", exception.getMessage());
-//        verify(institutionMapper, never()).toInstitution(any(InstitutionDTO.class));
-//        verify(institutionRepository, never()).save(any(Institution.class));
-//    }
+    @Test
+    void createInstitution_NullInstitutionDTO_ThrowsException() {
+        // given
+        InstitutionDTO institutionDTO = null;
+
+        // when + then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> institutionService.createInstitution(institutionDTO));
+        assertEquals("Invalid input", exception.getMessage());
+        verify(institutionMapper, never()).toInstitution(any(InstitutionDTO.class));
+        verify(institutionRepository, never()).save(any(Institution.class));
+    }
 
     @Test
     void getAllInstitutions_InstitutionsExist_InstitutionsReturned() {
@@ -198,15 +198,4 @@ public class InstitutionServiceTest {
         assertEquals(doctor2.getLastName(), result.get(1).getLastName());
         assertEquals(doctor2.getSpecialization(), result.get(1).getSpecialization());
     }
-
-//    @Test
-//    void getDoctorsForInstitution_NonExistentInstitution_IllegalArgumentExceptionThrown() {
-//        // given
-//        Long nonExistentInstitutionId = 12345L;
-//
-//        // when + then
-//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> institutionService.getDoctorsForInstitution(nonExistentInstitutionId));
-//        assertEquals("Institution not found.", exception.getMessage());
-//        verify(institutionRepository, times(1)).findById(nonExistentInstitutionId);
-//    }
 }

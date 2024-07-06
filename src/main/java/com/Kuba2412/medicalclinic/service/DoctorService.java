@@ -34,7 +34,10 @@ public class DoctorService {
 
     public void createDoctor(DoctorDTO doctorDTO) {
         if (doctorDTO == null) {
-            throw new IllegalArgumentException("Doctor can't be null.");
+            throw new IllegalArgumentException("Invalid input");
+        }
+        if (doctorDTO.getFirstName() == null || doctorDTO.getLastName() == null || doctorDTO.getEmail() == null) {
+            throw new IllegalArgumentException("Invalid input");
         }
         Doctor doctor = doctorMapper.toDoctor(doctorDTO);
         doctorRepository.save(doctor);

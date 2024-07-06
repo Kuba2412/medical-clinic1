@@ -110,6 +110,7 @@ public class VisitServiceTest {
 
         List<Visit> visits = Arrays.asList(visit1, visit2);
         Page<Visit> visitPage = new PageImpl<>(visits, pageable, visits.size());
+        when(patientRepository.existsById(patientId)).thenReturn(true);
         when(visitRepository.findAllByPatientId(patientId, pageable)).thenReturn(visitPage);
 
         // when
@@ -135,6 +136,7 @@ public class VisitServiceTest {
         // given
         Long patientId = 1L;
         Pageable pageable = PageRequest.of(0, 10);
+        when(patientRepository.existsById(patientId)).thenReturn(true);
         Page<Visit> emptyPage = Page.empty(pageable);
         when(visitRepository.findAllByPatientId(patientId, pageable)).thenReturn(emptyPage);
 

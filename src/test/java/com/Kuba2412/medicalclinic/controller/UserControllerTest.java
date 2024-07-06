@@ -13,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,15 +69,15 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value(user.getUsername()));
     }
 
-//    @Test
-//    void getUserId_UserNotFound_ThrowException() throws Exception {
-//        when(userService.getUserId(anyLong())).thenThrow(new IllegalArgumentException("User not found."));
-//
-//        mockMvc.perform(get("/users/12345")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("User not found."));
-//    }
+    @Test
+    void getUserId_UserNotFound_ThrowException() throws Exception {
+        when(userService.getUserId(anyLong())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+
+        mockMvc.perform(get("/users/12345")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found."));
+    }
 
     @Test
     void getAllUsers_UsersExist_UsersReturned() throws Exception {
@@ -103,14 +105,14 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value(user.getUsername()));
     }
 
-//    @Test
-//    void updatePassword_UserNotFound_ThrowException() throws Exception {
-//        when(userService.updatePassword(anyString(), anyString())).thenThrow(new IllegalArgumentException("User not found."));
-//
-//        mockMvc.perform(put("/users/nonExistentUser/password")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString("newPassword")))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("User not found."));
-//    }
+    @Test
+    void updatePassword_UserNotFound_ThrowException() throws Exception {
+        when(userService.updatePassword(anyString(), anyString())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+
+        mockMvc.perform(put("/users/nonExistentUser/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString("newPassword")))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found."));
+    }
 }

@@ -38,12 +38,12 @@ public class DoctorServiceTest {
         DoctorDTO doctorDTO = new DoctorDTO();
         doctorDTO.setFirstName("Kuba");
         doctorDTO.setLastName("Nowak");
-        doctorDTO.setSpecialization("Specjalizacja");
+        doctorDTO.setEmail("kuba@example.com");
 
         Doctor doctor = new Doctor();
         doctor.setFirstName(doctorDTO.getFirstName());
         doctor.setLastName(doctorDTO.getLastName());
-        doctor.setSpecialization(doctorDTO.getSpecialization());
+        doctor.setEmail(doctorDTO.getEmail());
         when(doctorMapper.toDoctor(doctorDTO)).thenReturn(doctor);
 
         // when
@@ -61,7 +61,7 @@ public class DoctorServiceTest {
 
         // when + then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> doctorService.createDoctor(doctorDTO));
-        assertEquals("Doctor can't be null.", exception.getMessage());
+        assertEquals("Invalid input", exception.getMessage());
         verify(doctorMapper, never()).toDoctor(any(DoctorDTO.class));
         verify(doctorRepository, never()).save(any(Doctor.class));
     }

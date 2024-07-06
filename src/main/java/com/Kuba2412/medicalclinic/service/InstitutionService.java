@@ -32,6 +32,9 @@ public class InstitutionService {
      */
 
     public void createInstitution(InstitutionDTO institutionDTO) {
+        if (institutionDTO == null || institutionDTO.getName() == null) {
+            throw new IllegalArgumentException("Invalid input");
+        }
         Institution institution = institutionMapper.toInstitution(institutionDTO);
         institutionRepository.save(institution);
     }
@@ -73,7 +76,3 @@ public class InstitutionService {
         return institution.getDoctors();
     }
 }
-
-
-
-

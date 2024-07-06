@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -64,19 +66,20 @@ public class DoctorControllerTest {
                 .andExpect(content().string("Doctor created successfully."));
     }
 
-//    @Test
-//    void createDoctor_InvalidInput_BadRequest() throws Exception {
-//        DoctorDTO invalidDoctorDTO = new DoctorDTO();
-//
-//        mockMvc.perform(post("/doctors")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(invalidDoctorDTO)))
-//                .andExpect(status().isBadRequest());
-//    }
+    @Test
+    void createDoctor_InvalidInput_BadRequest() throws Exception {
+        DoctorDTO invalidDoctorDTO = new DoctorDTO();
+
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input")).when(doctorService).createDoctor(any(DoctorDTO.class));
+
+        mockMvc.perform(post("/doctors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidDoctorDTO)))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     void getAllDoctors_DoctorsExist_DoctorsReturned() throws Exception {
-
         SimpleDoctorDTO doctorDTO = new SimpleDoctorDTO();
         doctorDTO.setFirstName("Kuba");
         doctorDTO.setLastName("Ppp");
@@ -117,16 +120,16 @@ public class DoctorControllerTest {
                 .andExpect(jsonPath("$[0].name").value(institution.getName()));
     }
 
-//    @Test
-//    void getAssignedInstitutionsForDoctor_DoctorNotFound_ThrowException() throws Exception {
-//        Long nonExistentDoctorId = 12345L;
-//
-//        when(doctorService.getAssignedInstitutionsForDoctor(nonExistentDoctorId))
-//                .thenThrow(new IllegalArgumentException("Doctor not found."));
-//
-//        mockMvc.perform(get("/doctors/{doctorId}/institutions", nonExistentDoctorId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Doctor not found."));
-//    }
+    @Test
+    void getAssignedInstitutionsForDoctor_DoctorNotFound_ThrowException() throws Exception {
+        Long nonExistentDoctorId = 12345L;
+
+        when(doctorService.getAssignedInstitutionsForDoctor(nonExistentDoctorId))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found."));
+
+        mockMvc.perform(get("/doctors/{doctorId}/institutions", nonExistentDoctorId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Doctor not found."));
+    }
 }

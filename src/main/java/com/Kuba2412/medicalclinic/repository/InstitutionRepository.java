@@ -1,6 +1,5 @@
 package com.Kuba2412.medicalclinic.repository;
 
-
 import com.Kuba2412.medicalclinic.model.Institution;
 
 import org.springframework.data.domain.Page;

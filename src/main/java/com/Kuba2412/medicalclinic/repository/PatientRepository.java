@@ -15,5 +15,4 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     Optional<Patient> findByEmail(String email);
 
     Page<Patient> findByFirstName(String firstName, Pageable pageable);
-
 }

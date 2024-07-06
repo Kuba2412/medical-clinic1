@@ -32,9 +32,9 @@ public class PatientService {
      */
 
     public PatientDTO getPatientDtoByEmail(String email) {
-        Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
-        return patientMapper.patientToPatientDTO(patient);
+        return patientRepository.findByEmail(email)
+                .map(patientMapper::patientToPatientDTO)
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found."));
     }
 
     /**
@@ -120,9 +120,11 @@ public class PatientService {
 
     public PatientDTO updatePatientByEmail(String email, PatientDTO newPatientDto) {
         Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
-        Patient updatedPatient = patientMapper.patientDTOToPatient(newPatientDto);
-        updatedPatient.setId(patient.getId());
-        return patientMapper.patientToPatientDTO(patientRepository.save(updatedPatient));
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found."));
+        patient.setFirstName(newPatientDto.getFirstName());
+        patient.setLastName(newPatientDto.getLastName());
+        patient.setPhoneNumber(newPatientDto.getPhoneNumber());
+        patientRepository.save(patient);
+        return patientMapper.patientToPatientDTO(patient);
     }
 }

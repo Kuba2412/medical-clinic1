@@ -51,6 +51,9 @@ public class VisitService {
      */
 
     public List<Visit> getAllVisitsForPatient(Long patientId, Pageable pageable) {
+        if (!patientRepository.existsById(patientId)) {
+            throw new IllegalArgumentException("Patient not found");
+        }
         return visitRepository.findAllByPatientId(patientId, pageable).getContent();
     }
 
@@ -94,7 +97,3 @@ public class VisitService {
         }
     }
 }
-
-
-
-

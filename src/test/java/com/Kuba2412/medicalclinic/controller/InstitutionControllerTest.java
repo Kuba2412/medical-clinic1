@@ -10,18 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,15 +60,17 @@ public class InstitutionControllerTest {
                 .andExpect(content().string("Institution created successfully."));
     }
 
-//    @Test
-//    void createInstitution_InvalidInput_BadRequest() throws Exception {
-//        InstitutionDTO invalidInstitutionDTO = new InstitutionDTO();
-//
-//        mockMvc.perform(post("/institutions")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(invalidInstitutionDTO)))
-//                .andExpect(status().isBadRequest());
-//    }
+    @Test
+    void createInstitution_InvalidInput_BadRequest() throws Exception {
+        InstitutionDTO invalidInstitutionDTO = new InstitutionDTO();
+
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input")).when(institutionService).createInstitution(any(InstitutionDTO.class));
+
+        mockMvc.perform(post("/institutions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidInstitutionDTO)))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     void getAllInstitutions_InstitutionsExist_InstitutionsReturned() throws Exception {
@@ -98,16 +99,16 @@ public class InstitutionControllerTest {
                 .andExpect(jsonPath("$[0].lastName").value(doctor.getLastName()));
     }
 
-//    @Test
-//    void getDoctorsForInstitution_InstitutionNotFound_ThrowException() throws Exception {
-//        Long nonExistentInstitutionId = 12345L;
-//
-//        when(institutionService.getDoctorsForInstitution(nonExistentInstitutionId))
-//                .thenThrow(new IllegalArgumentException("Institution not found."));
-//
-//        mockMvc.perform(get("/institutions/{institutionId}/doctors", nonExistentInstitutionId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Institution not found."));
-//    }
+    @Test
+    void getDoctorsForInstitution_InstitutionNotFound_ThrowException() throws Exception {
+        Long nonExistentInstitutionId = 12345L;
+
+        when(institutionService.getDoctorsForInstitution(nonExistentInstitutionId))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Institution not found."));
+
+        mockMvc.perform(get("/institutions/{institutionId}/doctors", nonExistentInstitutionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Institution not found."));
+    }
 }

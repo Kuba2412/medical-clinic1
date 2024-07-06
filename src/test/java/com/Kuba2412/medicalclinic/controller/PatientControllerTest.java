@@ -14,8 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -66,18 +68,18 @@ public class PatientControllerTest {
                 .andExpect(jsonPath("$.email").value(patientDTO.getEmail()));
     }
 
-//    @Test
-//    void getPatientByEmail_PatientNotFound_ThrowException() throws Exception {
-//        String nonExistentEmail = "kp123@gmail.com";
-//
-//        when(patientService.getPatientDtoByEmail(nonExistentEmail))
-//                .thenThrow(new IllegalArgumentException("Patient not found."));
-//
-//        mockMvc.perform(get("/patients/{email}", nonExistentEmail)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Patient not found."));
-//    }
+    @Test
+    void getPatientByEmail_PatientNotFound_ThrowException() throws Exception {
+        String nonExistentEmail = "kp123@gmail.com";
+
+        when(patientService.getPatientDtoByEmail(nonExistentEmail))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found."));
+
+        mockMvc.perform(get("/patients/{email}", nonExistentEmail)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Patient not found."));
+    }
 
     @Test
     void getPatientsByFirstName_PatientExists_PatientReturned() throws Exception {
@@ -126,18 +128,18 @@ public class PatientControllerTest {
                 .andExpect(jsonPath("$.email").value(patientDTO.getEmail()));
     }
 
-//    @Test
-//    void updatePatientByEmail_PatientNotFound_ThrowException() throws Exception {
-//        String nonExistentEmail = "kp123@gmail.com";
-//        PatientDTO patientDTO = new PatientDTO();
-//
-//        when(patientService.updatePatientByEmail(nonExistentEmail, patientDTO))
-//                .thenThrow(new IllegalArgumentException("Patient not found."));
-//
-//        mockMvc.perform(put("/patients/{email}", nonExistentEmail)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(patientDTO)))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Patient not found."));
-//    }
+    @Test
+    void updatePatientByEmail_PatientNotFound_ThrowException() throws Exception {
+        String nonExistentEmail = "kp123@gmail.com";
+        PatientDTO patientDTO = new PatientDTO();
+
+        when(patientService.updatePatientByEmail(nonExistentEmail, patientDTO))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found."));
+
+        mockMvc.perform(put("/patients/{email}", nonExistentEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(patientDTO)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Patient not found."));
+    }
 }
