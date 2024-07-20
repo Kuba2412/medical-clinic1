@@ -1,8 +1,6 @@
 package com.Kuba2412.medicalclinic.model.mapper;
 
-
 import com.Kuba2412.medicalclinic.model.Visit;
-
 import com.Kuba2412.medicalclinic.model.dto.VisitDTO;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
